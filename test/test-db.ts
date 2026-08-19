@@ -1,13 +1,19 @@
 import { pool } from "../src/db/pool.js";
 
-export async function clearMentions(): Promise<void> {
-  await pool.query("TRUNCATE TABLE mentions RESTART IDENTITY");
+export async function clearMentions() {
+  await pool.query("TRUNCATE TABLE mentions RESTART IDENTITY CASCADE");
 }
 
-export async function countMentions(): Promise<number> {
+export async function countMentions() {
   const result = await pool.query<{ count: string }>(
     "SELECT COUNT(*)::text AS count FROM mentions",
   );
 
-  return Number(result.rows[0].count);
+  const row = result.rows[0];
+
+  if (!row) {
+    throw new Error("Count query returned no rows");
+  }
+
+  return Number(row.count);
 }

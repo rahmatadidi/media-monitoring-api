@@ -16,10 +16,6 @@ describe("POST /internal/mentions/bulk", () => {
     await clearMentions();
   });
 
-  afterAll(async () => {
-    await pool.end();
-  });
-
   it("ingests all seed mentions", async () => {
     const response = await request(app)
       .post("/internal/mentions/bulk")
@@ -43,27 +39,35 @@ describe("POST /internal/mentions/bulk", () => {
       .post("/internal/mentions/bulk")
       .send(seedData);
 
+    console.log("FIRST:", firstResponse.body);
+
+    const countAfterFirstRequest = await countMentions();
+
+    console.log("COUNT AFTER FIRST:", countAfterFirstRequest);
+
+    const secondResponse = await request(app)
+      .post("/internal/mentions/bulk")
+      .send(seedData);
+
+    console.log("SECOND:", secondResponse.body);
+
+    const countAfterSecondRequest = await countMentions();
+
+    console.log("COUNT AFTER SECOND:", countAfterSecondRequest);
+
     expect(firstResponse.body).toEqual({
       received: 15,
       inserted: 14,
       duplicates: 1,
     });
 
-    const countAfterFirstRequest = await countMentions();
-
     expect(countAfterFirstRequest).toBe(14);
-
-    const secondResponse = await request(app)
-      .post("/internal/mentions/bulk")
-      .send(seedData);
 
     expect(secondResponse.body).toEqual({
       received: 15,
       inserted: 0,
       duplicates: 15,
     });
-
-    const countAfterSecondRequest = await countMentions();
 
     expect(countAfterSecondRequest).toBe(14);
   });
