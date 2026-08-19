@@ -24,8 +24,7 @@ export async function searchMentionsController(
 
   if (!Number.isInteger(pageParam) || pageParam < 1) {
     res.status(400).json({
-      error: "Invalid request",
-      message: "page must be a positive integer",
+      error: "page must be a positive integer",
     });
     return;
   }
@@ -35,24 +34,21 @@ export async function searchMentionsController(
 
   if (req.query.from !== undefined && from === undefined) {
     res.status(400).json({
-      error: "Invalid request",
-      message: "Invalid from date. Expected a valid date value.",
+      error: "Invalid from date",
     });
     return;
   }
 
   if (req.query.to !== undefined && to === undefined) {
     res.status(400).json({
-      error: "Invalid request",
-      message: "Invalid to date. Expected a valid date value.",
+      error: "Invalid to date",
     });
     return;
   }
 
   if (from && to && from >= to) {
     res.status(400).json({
-      error: "Invalid request",
-      message: "from must be earlier than to",
+      error: "from must be earlier than to",
     });
     return;
   }
@@ -76,8 +72,7 @@ export async function searchMentionsController(
     console.error("Failed to search mentions:", error);
 
     res.status(500).json({
-      error: "Internal server error",
-      message: "Failed to search mentions",
+      error: "Failed to search mentions",
     });
   }
 }
