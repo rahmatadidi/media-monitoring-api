@@ -140,21 +140,25 @@ export function createMentionKey(
 }
 
 export function normalizeMention(mention: RawMention): NormalizedMention {
+  const externalId = mention.external_id.trim();
   const sourceNormalized = normalizeSource(mention.source);
   const title = mention.title?.trim() || null;
   const content = mention.content.trim();
   const publishedAt = parsePublishedAt(mention.published_at);
   const engagement = parseEngagement(mention.engagement);
   const canonicalUrl = canonicalizeUrl(mention.url);
+
   const articleKey = createArticleKey(
     canonicalUrl,
     sourceNormalized,
     normalizeTitle(title),
     publishedAt,
   );
-  const mentionKey = createMentionKey(sourceNormalized, mention.external_id);
+
+  const mentionKey = createMentionKey(sourceNormalized, externalId);
+
   return {
-    externalId: mention.external_id,
+    externalId,
     source: mention.source,
     sourceNormalized,
     title,

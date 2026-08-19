@@ -38,22 +38,12 @@ describe("POST /internal/mentions/bulk", () => {
     const firstResponse = await request(app)
       .post("/internal/mentions/bulk")
       .send(seedData);
-
-    console.log("FIRST:", firstResponse.body);
-
     const countAfterFirstRequest = await countMentions();
-
-    console.log("COUNT AFTER FIRST:", countAfterFirstRequest);
-
     const secondResponse = await request(app)
       .post("/internal/mentions/bulk")
       .send(seedData);
 
-    console.log("SECOND:", secondResponse.body);
-
     const countAfterSecondRequest = await countMentions();
-
-    console.log("COUNT AFTER SECOND:", countAfterSecondRequest);
 
     expect(firstResponse.body).toEqual({
       received: 15,
