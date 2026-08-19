@@ -1,5 +1,6 @@
 import express from "express";
 import { pool } from "./db/pool.js";
+import mentionsRoutes from "./mentions/mention.routes.js";
 
 const app = express();
 app.use(express.json());
@@ -22,5 +23,7 @@ app.get("/health", async (_req, res) => {
     });
   }
 });
+
+app.use(mentionsRoutes);
 
 export default app;

@@ -5,7 +5,7 @@ import {
   parseEngagement,
   parsePublishedAt,
   stripHtml,
-} from "../mentions/mention.normalizer.js";
+} from "../src/mentions/mention.normalizer.js";
 
 describe("normalizeSource", () => {
   it("normalizes source aliases", () => {
