@@ -1,4 +1,5 @@
 import type { Request, Response } from "express";
+
 import { ingestMentions } from "./mention.service.js";
 import { RawMention } from "./mention.type.js";
 
@@ -20,12 +21,9 @@ export async function bulkIngest(req: Request, res: Response): Promise<void> {
   }
 
   try {
-    const processed = await ingestMentions(records as RawMention[]);
+    const result = await ingestMentions(records as RawMention[]);
 
-    res.status(200).json({
-      received: records.length,
-      processed,
-    });
+    res.status(200).json(result);
   } catch (error) {
     console.error("Bulk ingestion failed:", error);
 

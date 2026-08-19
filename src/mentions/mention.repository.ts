@@ -4,8 +4,8 @@ import { NormalizedMention } from "./mention.type.js";
 export async function upsertMention(
   client: PoolClient,
   mention: NormalizedMention,
-): Promise<void> {
-  await client.query(
+): Promise<boolean> {
+  const result = await client.query(
     `
       INSERT INTO mentions (
         external_id,
@@ -47,6 +47,8 @@ export async function upsertMention(
           )
         END,
         updated_at = NOW()
+      RETURNING
+        (xmax = 0) AS inserted
     `,
     [
       mention.externalId,
@@ -64,4 +66,6 @@ export async function upsertMention(
       mention.mentionKey,
     ],
   );
+
+  return result.rows[0].inserted;
 }
